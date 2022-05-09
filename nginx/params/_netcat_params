@@ -1,4 +1,4 @@
-		root /var/www/html/xxx.com/public_html;
+		root /srv/www/xxx.com/public_html;
 
 	    index index.php index.html index.shtml;
 
