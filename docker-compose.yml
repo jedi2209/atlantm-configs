@@ -52,8 +52,8 @@ services:
         - /srv/docker/logs/nginx:/var/www/html/xxx.com/logs
         - /srv/docker/logs/nginx:/var/www/html/blog.xxx.com/logs
       ports:
-       - 80
-       - 443
+       - "80:80"
+       - "443:443"
       links:
         - php-fpm
       depends_on:
