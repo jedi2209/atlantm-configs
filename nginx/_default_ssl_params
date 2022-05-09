@@ -1,0 +1,32 @@
+	listen 443 ssl http2;
+	charset UTF-8;
+
+	server_tokens off;
+	add_header X-Content-Type-Options nosniff;
+	add_header X-Frame-Options "";
+	add_header X-XSS-Protection "1; mode=block";
+	add_header Content-Security-Policy-Report-Only "default-src 'self' *.appsflyer.com appsflyer.com amlkv2.xxx.com cdn.XXXX.com api-backend.xxx.com api.xxx.com *.yandex.ru *.yandex.by *.yandex.com *.google-analytics.com *.googleapis.com 'unsafe-inline' 'unsafe-eval'; script-src 'self' *.appsflyer.com appsflyer.com cdn.XXXX.com amlkv2.xxx.com api-backend.xxx.com api.xxx.com *.bootstrapcdn.com *.yandex.ru *.yandex.by *.yandex.ua *.yandex.com yastatic.net *.pluso.ru *.disquscdn.com cdnjs.cloudflare.com *.doubleckick.net *.google-analytics.com *.googletagmanager.com *.googleapis.com 'unsafe-inline' 'unsafe-eval'; img-src * 'self' data:; font-src 'self' data: *.disquscdn.com *.bootstrapcdn.com cdn.XXXX.com api.xxx.com fonts.googleapis.com; frame-src 'self' amlkv2.xxx.com cdn.XXXX.com api-backend.xxx.com api.xxx.com *.youtube.com; object-src 'self' 'unsafe-inline' 'unsafe-eval'; report-uri https://www.xxx.com/csp.php";
+	add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+
+	client_max_body_size 32m;
+
+####################################### SSL Section #######################################
+
+	ssl_stapling off;
+	ssl_stapling_verify off;
+	resolver 8.8.8.8 8.8.4.4;
+	resolver_timeout 10s;
+	ssl off;
+
+	ssl_certificate /var/www/conf/letsencrypt/api.xxx.com/fullchain1.pem;
+	ssl_certificate_key /var/www/conf/letsencrypt/api.xxx.com/privkey1.pem;
+	ssl_trusted_certificate /var/www/conf/letsencrypt/api.xxx.com/chain1.pem;
+
+	ssl_session_timeout 1h;
+	ssl_session_cache shared:ssl_session_cache:10m;
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+
+	ssl_prefer_server_ciphers on;
+	ssl_ciphers AES256+EECDH:AES256+EDH:!aNULL;
+
+#################################### // SSL Section // ####################################

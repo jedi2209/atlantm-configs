@@ -1,0 +1,11 @@
+
+		real_ip_header X-Forwarded-For;
+		set_real_ip_from 0.0.0.0/0;
+
+		root /var/www/html/xxx.com/public_html;
+
+	    index index.php index.html index.shtml;
+
+		if (!-e $request_filename) {
+			rewrite ^(.+)$ /netcat/require/e404.php;
+		}

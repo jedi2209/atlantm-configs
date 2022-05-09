@@ -1,0 +1,49 @@
+		root /var/www/html/xxx.com/public_html;
+
+	    index index.php index.html index.shtml;
+
+		if (!-e $request_filename) {
+			rewrite ^(.+)$ /netcat/require/e404.php;
+		}
+
+		location ~ \.php$ {
+			fastcgi_pass unix:/var/run/php-fpm/atlantm.main.sock;
+			fastcgi_index index.php;
+
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+			include /var/www/conf/nginx/fastcgi_params;
+			fastcgi_ignore_client_abort	off;
+		}
+
+		location = /_internal_logs/* {
+			auth_basic "Restricted";
+			auth_basic_user_file /var/www/conf/nginx/_internal_logs.htpasswd;
+		}
+
+		location = /robots.txt {
+			rewrite ^(.+)$ /netcat/require/e404.php;
+		}
+
+		location = /sitemap.xml {
+			rewrite ^(.+)$ /netcat/require/e404.php;
+		}
+
+        location ~/n_files/* {
+			index index.php
+			fastcgi_cache_key "$request_method|$http_if_modified_since|$http_if_none_match|$host|$request_uri";
+			access_log off;
+			if ($request_uri ~ "[0-9]+x[0-9]+c?w?g?i?/") { set $resizeimg "image"; }
+			if (!-f $request_filename) { set $resizeimg "no ${resizeimg}"; }
+			if ($resizeimg = "no image") {
+				rewrite ^(.+)$ /netcat/modules/thumbnail/thumbnail.php?REQUEST_URI=$1;
+			}
+			if (!-e $request_filename) {
+				rewrite ^(.+)$ /netcat/require/e404.php?REQUEST_URI=$1 last;
+			}
+        }
+
+		location ~* \.(css|js|ico|xml|txt|png|gif|jpg|jpeg|svg)$ {
+		    expires max;
+			log_not_found off;
+		}
