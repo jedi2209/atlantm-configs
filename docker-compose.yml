@@ -47,7 +47,8 @@ services:
         - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
         - ./nginx/fastcgi_params:/etc/nginx/fastcgi_params:ro
         - ./certbot/conf:/etc/nginx/certs:ro
-        - /srv/docker:/var/www/html/default/logs/
+        - /srv/docker/logs/nginx:/var/www/html/default/logs/
+        - /srv/docker/logs/nginx:/var/www/html/xxx.com/logs/
       ports:
        - "80:80"
        - "443:443"
