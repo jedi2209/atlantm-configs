@@ -23,6 +23,7 @@ RUN apt-get update; \
         php8.1-ssh2 \ 
         php8.1-tidy \ 
         php8.1-xmlrpc \ 
-        php8.1-xsl; \
+        php8.1-xsl \
+        php8.1-raphf; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
