@@ -13,7 +13,7 @@
 			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 			fastcgi_param HTTPS on;
 
-			include /var/www/conf/nginx/fastcgi_params;
+			include fastcgi_params;
 			fastcgi_ignore_client_abort	off;
 
 			
