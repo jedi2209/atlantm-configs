@@ -39,7 +39,7 @@ services:
       working_dir: *working-dir
       restart: always
       volumes:
-        - /srv/www
+        - /srv/www:/srv/docker
         - ./nginx/conf.d:/etc/nginx/conf.d:ro
         - ./nginx/default.d:/etc/nginx/default.d:ro
         - ./nginx/params:/etc/nginx/params:ro
@@ -52,12 +52,12 @@ services:
         - /srv/docker/logs/nginx:/var/www/html/xxx.com/logs
         - /srv/docker/logs/nginx:/var/www/html/blog.xxx.com/logs
       ports:
-       - "80:80"
-       - "443:443"
+       - 80
+       - 443
       links:
-        - php:php-fpm
+        - php-fpm
       depends_on:
-        - "php-fpm"
+        - php-fpm
 
     certbot:
       image: certbot/certbot:latest
@@ -70,12 +70,12 @@ services:
       container_name: atlantm-api-php-fpm
       working_dir: *working-dir
       volumes:
-        - /srv/www
+        - /srv/www:/srv/docker
         - './php-fpm/php-ini-overrides.ini:/etc/php/8.1/fpm/conf.d/99-overrides.ini'
         - './php-fpm/pool.d:/etc/php/8.1/fpm/pool.d'
         - '/srv/docker/logs/php/8.1/:/var/log/'
       ports:
-       - "10009:9000"
+       - 9000
       environment:
         <<: *common-variables
     #  #links:
