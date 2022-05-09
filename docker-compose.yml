@@ -49,6 +49,7 @@ services:
         - ./certbot/conf:/etc/nginx/certs:ro
         - /srv/docker/logs/nginx:/var/www/html/default/logs/
         - /srv/docker/logs/nginx:/var/www/html/xxx.com/logs/
+        - /srv/docker/logs/nginx:/var/www/html/blog.xxx.com/logs/
       ports:
        - "80:80"
        - "443:443"
