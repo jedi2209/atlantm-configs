@@ -15,7 +15,6 @@
 	ssl_stapling_verify off;
 	resolver 8.8.8.8 8.8.4.4;
 	resolver_timeout 10s;
-	ssl off;
 
 	ssl_certificate /var/www/conf/letsencrypt/api.xxx.com/fullchain1.pem;
 	ssl_certificate_key /var/www/conf/letsencrypt/api.xxx.com/privkey1.pem;
