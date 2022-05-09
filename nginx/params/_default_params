@@ -42,8 +42,8 @@
     }
 
 	location ~ ^/(status|ping)$ {
-	    include fastcgi_params;
-		fastcgi_pass php-fpm;
-		fastcgi_param SCRIPT_FILENAME $fastcgi_script_name;
+	    include         fastcgi_params;
+		fastcgi_pass    php-fpm;
+		fastcgi_param   SCRIPT_FILENAME $fastcgi_script_name;
 		deny all;
 	}

@@ -7,18 +7,18 @@
 		}
 
 		location ~ \.php$ {
-			fastcgi_pass unix:/var/run/php-fpm/atlantm.main.sock;
-			fastcgi_index index.php;
+			fastcgi_pass    php-fpm;
+			fastcgi_index	index.php;
 
-			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-			fastcgi_param HTTPS on;
+			fastcgi_param	SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			fastcgi_param	HTTPS on;
 
 			include fastcgi_params;
 			fastcgi_ignore_client_abort	off;
 
 			
 			location ~/netcat/* {
-				fastcgi_pass unix:/var/run/php-fpm/atlantm.admin.sock;
+				fastcgi_pass	php-fpm;
 				expires -1;
 				add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
 				fastcgi_send_timeout 600;
