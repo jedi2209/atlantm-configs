@@ -48,20 +48,20 @@ services:
       ports:
        - "80:80"
        - "443:443"
-#      links:
-#        - "mysql:db"
+      links:
+        - "php-fpm"
 
-    # php-fpm:
-    #   build: phpdocker/php-fpm
-    #   container_name: atlantm-api-php-fpm
-    #   working_dir: *working-dir
-    #   volumes:
-    #     - /srv/www
-    #     - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.1/fpm/conf.d/99-overrides.ini'
-    #   ports:
-    #    - "10009:9000"
-    #   environment:
-    #     <<: *common-variables
+    php-fpm:
+      build: phpdocker/php-fpm
+      container_name: atlantm-api-php-fpm
+      working_dir: *working-dir
+      volumes:
+        - /srv/www
+        - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.1/fpm/conf.d/99-overrides.ini'
+      ports:
+       - "10009:9000"
+      environment:
+        <<: *common-variables
     #  #links:
     #  #  - "mysql:db"
 
