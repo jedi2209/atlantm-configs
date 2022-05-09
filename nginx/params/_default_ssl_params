@@ -16,9 +16,9 @@
 	resolver 8.8.8.8 8.8.4.4;
 	resolver_timeout 10s;
 
-	ssl_certificate /etc/letsencrypt/api.xxx.com/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/api.xxx.com/privkey.pem;
-	ssl_trusted_certificate /etc/letsencrypt/api.xxx.com/chain.pem;
+	ssl_certificate /srv/letsencrypt/XXXX.ru/fullchain.pem;
+	ssl_certificate_key /srv/letsencrypt/XXXX.ru/privkey.pem;
+	ssl_trusted_certificate /srv/letsencrypt/XXXX.ru/chain.pem;
 
 	ssl_session_timeout 1h;
 	ssl_session_cache shared:ssl_session_cache:10m;
