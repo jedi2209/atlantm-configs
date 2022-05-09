@@ -10,4 +10,3 @@ sudo chown atlantm:www-data /srv/config; sudo chown atlantm:www-data /srv/www;
 
 echo $(cat ~/.ssh/id_ed25519.pub);
 read -p "Add this key to read-only repo and press Enter...";
-git clone git@bitbucket.org:zavarkateam/atlantm-config.git /srv/config;
