@@ -16,9 +16,9 @@
 	resolver 8.8.8.8 8.8.4.4;
 	resolver_timeout 10s;
 
-	ssl_certificate /etc/nginx/certs/fullchain.pem;
-	ssl_certificate_key /etc/nginx/certs/privkey.pem;
-	ssl_trusted_certificate /etc/nginx/certs/chain.pem;
+	ssl_certificate /etc/nginx/certs/live/XXXX.ru/fullchain.pem;
+	ssl_certificate_key /etc/nginx/certs/live/XXXX.ru/privkey.pem;
+	ssl_trusted_certificate /etc/nginx/certs/live/XXXX.ru/chain.pem;
 
 	ssl_session_timeout 1h;
 	ssl_session_cache shared:ssl_session_cache:10m;
