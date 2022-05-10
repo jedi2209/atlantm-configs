@@ -7,6 +7,10 @@ x-common-variables:
     PRODUCTION_TYPE: prod
     APP_DEBUG: 0
 x-common-variables:
+  &ftp-variables
+    USERS: "XXXX|XXXX|/ftp/new|10000 XXXX|XXXX|/ftp/trade-in|10002 XXXX|XXXX|/ftp/service-calc|10001"
+    ADDRESS: "ftp.XXXX.ru"
+x-common-variables:
   &mysql-variables
     MYSQL_ROOT_PASSWORD: root
     MYSQL_DATABASE: atlantm
@@ -41,11 +45,10 @@ services:
         - ../ftp/:/ftp/
         - /srv/docker/logs/vsftpd:/var/log/
       ports:
-        - 21:21
+        - "21:21"
         - "21000-21010:21000-21010"
       environment:
-        USERS: "XXXX|XXXX|/ftp/new|10000 XXXX|XXXX|/ftp/trade-in|10002 XXXX|XXXX|/ftp/service-calc|10001"
-        ADDRESS: "ftp.XXXX.ru"
+        <<: *ftp-variables
     webserver:
       image: nginx:alpine
       container_name: atlantm-api-nginx
