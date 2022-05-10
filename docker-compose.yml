@@ -86,6 +86,7 @@ services:
       container_name: atlantm-api-php-fpm
       working_dir: /srv/www
       volumes:
+        - '~/.mysql/root.crt:~/.mysql/root.crt'
         - /srv/www:/srv/www
         - './php-fpm/php-ini-overrides.ini:/etc/php/8.1/fpm/conf.d/99-overrides.ini'
         - './php-fpm/pool.d:/etc/php/8.1/fpm/pool.d'
@@ -97,16 +98,15 @@ services:
       # links:
       #   - "mysql:db"
 
-    # composer:
-    #   # image: composer/composer
-    #   build: composer/1.8/
-    #   ports:
-    #     - "100003:9000"
-    #   volumes:
-    #     - ../www/:/composer
-    #   container_name: atlantm-api-composer
-    #   working_dir: /composer
-    #   command: install
+    composer:
+      build: composer/1.8/
+      container_name: atlantm-api-composer
+      working_dir: /composer
+      volumes:
+        - /srv/www/:/composer
+      ports:
+        - "100003:9000"
+      command: install
 
     # phpmyadmin:
     #   image: phpmyadmin/phpmyadmin

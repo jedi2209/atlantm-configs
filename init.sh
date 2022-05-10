@@ -10,4 +10,7 @@ sudo mkdir /srv/www/; sudo mkdir /srv/docker/; sudo mkdir /srv/config/; \
 sudo chown atlantm:www-data /srv/config; sudo chown atlantm:www-data /srv/www; \
 echo $(cat ~/.ssh/id_ed25519.pub); \
 read -p "Add this key to read-only repo and press Enter..."; \
-git clone git@bitbucket.org:zavarkateam/atlantm-config.git; \
+git clone git@bitbucket.org:zavarkateam/atlantm-config.git /srv/config; \
+mkdir ~/.mysql && \
+wget "https://storage.yandexcloud.net/cloud-certs/CA.pem" -O ~/.mysql/root.crt && \
+chmod 0600 ~/.mysql/root.crt
