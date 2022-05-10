@@ -36,7 +36,6 @@ services:
     #     <<: *mysql-variables
     #   ports:
     #     - "10002:3306"
-
     ftp:
       image: delfer/alpine-ftp-server
       container_name: atlantm-api-ftp
@@ -95,8 +94,8 @@ services:
        - "9000:9000"
       environment:
         <<: *common-variables
-    #  #links:
-    #  #  - "mysql:db"
+      # links:
+      #   - "mysql:db"
 
     # composer:
     #   # image: composer/composer
