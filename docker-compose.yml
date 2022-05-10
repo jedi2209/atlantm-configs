@@ -98,15 +98,15 @@ services:
       # links:
       #   - "mysql:db"
 
-    composer:
-      build: composer/1.8/
-      container_name: atlantm-api-composer
-      working_dir: /composer
-      volumes:
-        - /srv/www/:/composer
-      ports:
-        - "100003:9000"
-      command: install
+    # composer:
+    #   build: composer/1.8/
+    #   container_name: atlantm-api-composer
+    #   working_dir: /composer
+    #   volumes:
+    #     - /srv/www/:/composer
+    #   ports:
+    #     - "100003:9000"
+    #   command: install
 
     # phpmyadmin:
     #   image: phpmyadmin/phpmyadmin
