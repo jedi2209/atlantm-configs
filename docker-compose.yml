@@ -86,8 +86,7 @@ services:
       container_name: atlantm-api-php-fpm
       working_dir: /srv/www
       volumes:
-        - '~/.mysql/root.crt:/srv/www/.mysql/root.crt'
-        - /srv/www:/srv/www
+        - '/srv/www:/srv/www'
         - './php-fpm/php-ini-overrides.ini:/etc/php/8.1/fpm/conf.d/99-overrides.ini'
         - './php-fpm/pool.d:/etc/php/8.1/fpm/pool.d'
         - '/srv/docker/logs/php/8.1/:/var/log/'
@@ -108,24 +107,23 @@ services:
     #     - "100003:9000"
     #   command: install
 
-    # phpmyadmin:
-    #   image: phpmyadmin/phpmyadmin
-    #   container_name: phpmyadmin
-    #   environment:
-    #     - PMA_ARBITRARY=0
-    #     - PMA_HOST=mysql
-    #     - PMA_USER=root
-    #     - PMA_PASSWORD=root
-    #     - MYSQL_USER=pma
-    #     - MYSQL_PASSWORD=pma
-    #     - MYSQL_ROOT_PASSWORD=root
-    #   volumes:
-    #     - /sessions
-    #     - ./phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
-    #   depends_on:
-    #     - mysql
-    #   ports:
-    #     - "10004:80"
+    phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      container_name: phpmyadmin
+      environment:
+        - PMA_ARBITRARY=0
+        - PMA_HOST=rc1b-6hjqm8by6fiennpe.mdb.yandexcloud.net
+        - PMA_USER=myadmin
+        - PMA_PASSWORD=Vagra#ncy6MooSnlightUtmost
+        - MYSQL_USER=myadmin
+        - MYSQL_PASSWORD=Vagra#ncy6MooSnlightUtmost
+      volumes:
+        - ./phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+        - ./mysql/crt:/mysql
+      # depends_on:
+      #   - mysql
+      ports:
+        - "10004:80"
 #      command: cd sql;
 #      links:
 #        - "mysql:mysql"
