@@ -13,7 +13,7 @@ $cfg['Server']['only_db'] = '';
 $cfg['lang'] = 'ru';
 
 // IP address of your instance
-$cfg['Servers'][$i]['host'] = 'db';
+$cfg['Servers'][$i]['host'] = 'rc1b-6hjqm8by6fiennpe.mdb.yandexcloud.net';
 // Use SSL for connection
 $cfg['Servers'][$i]['ssl'] = true;
 $cfg['Servers'][$i]['auth_type'] = 'cookie';

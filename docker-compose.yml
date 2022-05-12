@@ -107,27 +107,24 @@ services:
     #     - "100003:9000"
     #   command: install
 
-    phpmyadmin:
-      image: phpmyadmin/phpmyadmin
-      container_name: atlantm-api-phpmyadmin
-      environment:
-        - PMA_ARBITRARY=1
-        - PMA_HOST=rc1b-6hjqm8by6fiennpe.mdb.yandexcloud.net
-        - PMA_PORT=3306
-        - PMA_USER=myadmin
-        - PMA_PASSWORD=Vagra#ncy6MooSnlightUtmost
-      volumes:
-        - /sessions
-        - ./phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
-        - /srv/docker/logs/phpmyadmin:/var/log
-        - ./mysql/crt:/var/www/html/mysql
-      ports:
-        - "10004:80"
-      extra_hosts:
-      - "db:51.250.101.94"
-      - "db2:rc1b-6hjqm8by6fiennpe.mdb.yandexcloud.net"
-      # depends_on:
-      #   - mysql
-      # command: cd sql;
-      # links:
-      #   - "mysql:mysql"
+    # phpmyadmin:
+    #   image: phpmyadmin/phpmyadmin
+    #   container_name: atlantm-api-phpmyadmin
+    #   environment:
+    #     - PMA_ARBITRARY=1
+    #     - PMA_HOST=rc1b-6hjqm8by6fiennpe.mdb.yandexcloud.net
+    #     - PMA_PORT=3306
+    #     - PMA_USER=myadmin
+    #     - PMA_PASSWORD=Vagra#ncy6MooSnlightUtmost
+    #   volumes:
+    #     - /sessions
+    #     - ./phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+    #     - /srv/docker/logs/phpmyadmin:/var/log
+    #     - ./mysql/crt:/var/www/html/mysql
+    #   ports:
+    #     - "10004:80"
+    #   # depends_on:
+    #   #   - mysql
+    #   # command: cd sql;
+    #   # links:
+    #   #   - "mysql:mysql"
