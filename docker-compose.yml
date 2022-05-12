@@ -113,6 +113,7 @@ services:
       environment:
         - PMA_ARBITRARY=0
         - PMA_HOST=rc1b-6hjqm8by6fiennpe.mdb.yandexcloud.net
+        - PMA_PORT=3306
         - PMA_USER=myadmin
         - PMA_PASSWORD=Vagra#ncy6MooSnlightUtmost
         - MYSQL_USER=myadmin

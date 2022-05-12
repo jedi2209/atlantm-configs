@@ -16,6 +16,8 @@ $cfg['lang'] = 'ru';
 $cfg['Servers'][$i]['host'] = 'rc1b-6hjqm8by6fiennpe.mdb.yandexcloud.net';
 // Use SSL for connection
 $cfg['Servers'][$i]['ssl'] = true;
+$cfg['Servers'][$i]['auth_type'] = 'cookie';
+$cfg['Servers'][$i]['extension'] = 'mysqli';
 // // Client secret key
 // $cfg['Servers'][$i]['ssl_key'] = '../client-key.pem';
 // // Client certificate
