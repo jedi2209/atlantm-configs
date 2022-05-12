@@ -125,8 +125,8 @@ services:
         - ./mysql/crt:/mysql
       ports:
         - "10004:80"
-      depends_on:
-        - mysql
+      # depends_on:
+      #   - mysql
       # command: cd sql;
       # links:
       #   - "mysql:mysql"
