@@ -123,6 +123,9 @@ services:
         - ./mysql/crt:/var/www/html/mysql
       ports:
         - "10004:80"
+      extra_hosts:
+      - "db:51.250.101.94"
+      - "db2:rc1b-6hjqm8by6fiennpe.mdb.yandexcloud.net"
       # depends_on:
       #   - mysql
       # command: cd sql;
