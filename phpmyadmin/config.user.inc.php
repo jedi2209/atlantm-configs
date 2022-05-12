@@ -23,6 +23,6 @@ $cfg['Servers'][$i]['extension'] = 'mysqli';
 // // Client certificate
 // $cfg['Servers'][$i]['ssl_cert'] = '../client-cert.pem';
 // Server certification authority
-$cfg['Servers'][$i]['ssl_ca'] = '/mysql/root.crt';
+$cfg['Servers'][$i]['ssl_ca'] = '/var/www/html/mysql/root.crt';
 // Disable SSL verification (see above note)
 $cfg['Servers'][$i]['ssl_verify'] = false;
