@@ -119,6 +119,7 @@ services:
         - MYSQL_PASSWORD=Vagra#ncy6MooSnlightUtmost
       volumes:
         - ./phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+        - /srv/docker/logs/phpmyadmin:/var/log
         - ./mysql/crt:/mysql
       # depends_on:
       #   - mysql
