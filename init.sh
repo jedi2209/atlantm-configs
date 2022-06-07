@@ -1,4 +1,6 @@
-sudo apt update -y; sudo apt upgrade -y; sudo apt install -y mc git zsh docker ca-certificates curl lynx gnupg lsb-release; \
+#!/bin/bash
+
+sudo apt update -y; sudo apt upgrade -y; sudo apt install -y mc git zsh ncdu docker mysql-client ca-certificates curl lynx gnupg lsb-release screen; \
 sudo rm -rf /usr/share/keyrings/docker-archive-keyring.gpg; curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg; \
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null; \
@@ -14,3 +16,5 @@ git clone git@bitbucket.org:zavarkateam/atlantm-config.git /srv/config; \
 mkdir ~/.mysql && \
 wget "https://storage.yandexcloud.net/cloud-certs/CA.pem" -O ~/.mysql/root.crt && \
 chmod 0600 ~/.mysql/root.crt
+cd /srv/config; docker-compose up --no-start; docker-compose restart && crontab cron/crontab;
+cd ~; curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash;

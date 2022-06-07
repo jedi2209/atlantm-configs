@@ -1,0 +1,6 @@
+[mysql]
+default-character-set = "utf8"
+default-character-set-database = "utf8"
+default-character-set-connection = "utf8"
+default-character-set-client = "utf8"
+time_zone = "Europe/Moscow"

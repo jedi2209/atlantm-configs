@@ -1,8 +1,8 @@
-proxy_set_header Accept-Encoding "*";
-proxy_set_header      Host     api.xxx.com;
-proxy_pass https://api.xxx.com;
+proxy_set_header    Accept-Encoding "*";
+proxy_set_header    Host api.xxx.com;
+proxy_pass          https://api.xxx.com;
 
-proxy_ssl_verify off;
+proxy_ssl_verify    off;
 proxy_ssl_server_name on;
 proxy_ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-proxy_ssl_name api.xxx.com;
+proxy_ssl_name      api.xxx.com;

@@ -70,5 +70,5 @@ server {
 		log_not_found off;
 	}
 
-	include params/_default_ssl_params;
+	# include params/_default_ssl_params;
 }

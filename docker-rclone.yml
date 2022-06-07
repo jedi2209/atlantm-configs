@@ -1,0 +1,23 @@
+    rclone30:
+      image: rclone/rclone:latest
+      container_name: atlantm-api-rclone-30
+      volumes:
+        - './rclone/config:/config/rclone/'
+        - '/srv/s3:/data:shared'
+      command: 'copy aws:30.xxx.com yandex:30.xxx.com'
+
+    # rclone-cdn:
+    #   image: rclone/rclone:latest
+    #   container_name: atlantm-api-rclone-cdn
+    #   volumes:
+    #     - './rclone/config:/config/rclone/'
+    #     - '/srv/s3:/data:shared'
+    #   command: 'copy aws:cdn.XXXX.com yandex:cdn.XXXX.com'
+
+    # rclone-resize:
+    #   image: rclone/rclone:latest
+    #   container_name: atlantm-api-rclone-resize
+    #   volumes:
+    #     - './rclone/config:/config/rclone/'
+    #     - '/srv/s3:/data:shared'
+    #   command: 'copy aws-resize:image-resize-625634697793-us-east-1 yandex:cdn.XXXX.com'
