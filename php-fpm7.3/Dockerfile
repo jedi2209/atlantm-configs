@@ -30,6 +30,7 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get update; \
         libmagickcore-dev \
         imagemagick; \
     apt-get clean; \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*; \
+    chmod 0777 -R /tmp /var/tmp/;
 
 RUN echo "www-data ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
