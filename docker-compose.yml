@@ -111,6 +111,9 @@ services:
     #   container_name: atlantm-api-adminer
     #   ports:
     #     - 20080:8080
+    apidoc:
+      build: apidoc
+      container_name: atlantm-api-apidoc
 
     # php-fpm:
     #   build: php-fpm
