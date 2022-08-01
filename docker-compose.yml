@@ -8,8 +8,8 @@ x-common-variables:
     APP_DEBUG: 0
 x-common-variables:
   &ftp-variables
-    USERS: "XXXX|XXXX|/ftp/new|10000 XXXX|XXXX|/ftp/trade-in|10002 XXXX|XXXX|/ftp/service-calc|10001"
-    ADDRESS: "ftp.XXXX.ru"
+    USERS: "XXXX|XXXX|/ftp/new|10000 XXXX|XXXX|/ftp/trade-in|10002 XXXX|XXXX|/ftp/service-calc|10001 XXXX|3XavVBsYXXXX|/ftp/XXXX|1001"
+    ADDRESS: "ftp-api.xxx.com"
 x-volumes:
   &project-volumes # {{папка локальная}}:{{папка на сервере}}
 x-common-variables:
@@ -34,6 +34,14 @@ services:
         - "1024-1048:1024-1048"
       environment:
         <<: *ftp-variables
+    sftp:
+      image: emberstack/sftp
+      container_name: atlantm-api-sftp
+      volumes:
+        - /srv/ftp/XXXX:/home/XXXX/upload
+        - ./sftp/sftp-config.json:/app/config/sftp.json:ro
+      ports:
+        - "22122:22"
     webserver:
       image: nginx:alpine
       container_name: atlantm-api-nginx
@@ -47,7 +55,6 @@ services:
         - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
         - ./nginx/fastcgi_params:/etc/nginx/fastcgi_params:ro
         - ./nginx/htpasswd:/etc/nginx/htpasswd:ro
-        # - ./certbot/conf:/etc/nginx/certs:ro
         - ../www:/srv/www
         - ../docker/logs/nginx:/var/log/nginx
         - ../docker/logs/nginx/default:/var/www/default/logs
@@ -76,7 +83,6 @@ services:
         - '../docker/tmp/php:/tmp/'
         - '../docker/logs/php/7.3/:/var/log/'
         - './php-fpm7.3/ImageMagick-6/policy.xml:/etc/ImageMagick-6/policy.xml'
-        # - '/srv/docker/logs/cron:/var/log/cron'
         - './.ssh/id_rsa:/home/ec2-user/.ssh/id_rsa'
         - '~/.config/yandex-cloud:/var/www/.config/yandex-cloud'
         - '~/yandex-cloud:/var/www/yandex-cloud'
@@ -107,14 +113,11 @@ services:
         MYSQL_USER: 'atlantm'
         MYSQL_PASSWORD: 'XXXX'
     
-    # adminer:
-    #   image: adminer
-    #   container_name: atlantm-api-adminer
-    #   ports:
-    #     - 20080:8080
-    apidoc:
-      build: apidoc
-      container_name: atlantm-api-apidoc
+    adminer:
+      image: adminer
+      container_name: atlantm-api-adminer
+      ports:
+        - 20080:8080
 
     # php-fpm:
     #   build: php-fpm
