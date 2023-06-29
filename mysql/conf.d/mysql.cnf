@@ -4,3 +4,11 @@ default-character-set-database = "utf8"
 default-character-set-connection = "utf8"
 default-character-set-client = "utf8"
 time_zone = "Europe/Moscow"
+
+wait_timeout=90
+net_read_timeout=90
+net_write_timeout=90
+interactive_timeout=300
+connect_timeout=90
+
+max_allowed_packet = 512M
