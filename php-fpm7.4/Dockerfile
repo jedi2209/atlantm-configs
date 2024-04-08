@@ -4,6 +4,7 @@ WORKDIR "/srv/www"
 RUN apt-get update; \
     apt-get -y --no-install-recommends install \
         git \ 
+        sudo \
         php7.4-bcmath \ 
         php7.4-bz2 \ 
         php7.4-decimal \ 
@@ -25,6 +26,11 @@ RUN apt-get update; \
         php7.4-tidy \ 
         php7.4-xmlrpc \ 
         php7.4-xsl \
-        php7.4-raphf; \
+        php7.4-raphf \
+        libmagickcore-dev \
+        imagemagick; \
     apt-get clean; \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*; \
+    chmod 0777 -R /tmp /var/tmp/;
+
+RUN echo "www-data ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
