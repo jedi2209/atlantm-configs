@@ -92,31 +92,6 @@ services:
       - "9002:9002"
       environment:
         <<: *common-variables
-    php-fpm81:
-      build: php-fpm8.1
-      container_name: atlantm-api-php-fpm81
-      working_dir: /srv/www
-      volumes:
-        - '/srv/www:/srv/www'
-        - '../ftp/:/srv/ftp/'
-        # - './php-fpm8.1/php-8.1.ini:/etc/php/8.1/fpm/php.ini'
-        - './php-fpm8.1/php-ini-overrides.ini:/etc/php/8.1/fpm/conf.d/99-overrides.ini'
-        - './php-fpm8.1/php-ini-overrides.ini:/etc/php/8.1/cli/conf.d/99-overrides.ini'
-        - './php-fpm8.1/php-fpm.conf:/etc/php/8.1/fpm/php-fpm.conf'
-        - './php-fpm8.1/pool.d:/etc/php/8.1/fpm/pool.d'
-        - '../docker/tmp/mysql:/var/lib/mysql/'
-        - '../docker/tmp/php:/tmp/'
-        - '../docker/logs/php/8.1/:/var/log/'
-        - './.ssh/id_rsa:/home/ec2-user/.ssh/id_rsa'
-        - '~/.config/yandex-cloud:/var/www/.config/yandex-cloud'
-        - '~/yandex-cloud:/var/www/yandex-cloud'
-        - '~/.config/yandex-cloud:/root/.config/yandex-cloud'
-        - '~/yandex-cloud:/root/yandex-cloud'
-        - './.aws/credentials:/root/.aws/credentials'
-      ports:
-      - "9001:9001"
-      environment:
-        <<: *common-variables
     php-fpm74:
       build: php-fpm7.4
       container_name: atlantm-api-php-fpm74
@@ -143,32 +118,6 @@ services:
         - "9004:9004"
       links:
         - db:db
-      environment:
-        <<: *common-variables
-    php-fpm73:
-      build: php-fpm7.3
-      container_name: atlantm-api-php-fpm73
-      working_dir: /srv/www
-      volumes:
-        - '../www:/srv/www'
-        - '../ftp/:/srv/ftp/'
-        - './php-fpm7.3/php-7.3.ini:/etc/php/7.3/fpm/php.ini'
-        - './php-fpm7.3/php-ini-overrides.ini:/etc/php/7.3/fpm/conf.d/99-overrides.ini'
-        - './php-fpm7.3/php-ini-overrides.ini:/etc/php/7.3/cli/conf.d/99-overrides.ini'
-        - './php-fpm7.3/php-fpm.conf:/etc/php/7.3/fpm/php-fpm.conf'
-        - './php-fpm7.3/pool.d:/etc/php/7.3/fpm/pool.d'
-        - '../docker/tmp/mysql:/var/lib/mysql/'
-        - '../docker/tmp/php:/tmp/'
-        - '../docker/logs/php/7.3/:/var/log/'
-        - './php-fpm7.3/ImageMagick-6/policy.xml:/etc/ImageMagick-6/policy.xml'
-        - './.ssh/id_rsa:/home/ec2-user/.ssh/id_rsa'
-        - '~/.config/yandex-cloud:/var/www/.config/yandex-cloud'
-        - '~/yandex-cloud:/var/www/yandex-cloud'
-        - '~/.config/yandex-cloud:/root/.config/yandex-cloud'
-        - '~/yandex-cloud:/root/yandex-cloud'
-        - './.aws/credentials:/root/.aws/credentials'
-      ports:
-       - "9003:9003"
       environment:
         <<: *common-variables
     db:
