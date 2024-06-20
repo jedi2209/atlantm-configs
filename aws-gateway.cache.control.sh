@@ -71,6 +71,8 @@ result=$(aws apigateway update-stage \
     'op=replace,path="/dealer/data/{dealer+}/GET/caching/ttlInSeconds",value=3600' \
     'op=replace,path="/functions/image-resize/GET/caching/enabled",value=false' \
     'op=replace,path="/functions/redirect/{proxy+}/GET/caching/enabled",value=false' \
+    'op=replace,path="/lkk/user/{userID+}/GET/caching/enabled",value=false' \
+    'op=replace,path="/mobile/check/version/GET/caching/enabled",value=false' \
     'op=replace,path="/CARS/NEW/SAP/CAR/GET/caching/enabled",value=false' \
     'op=replace,path="/cars/new/sap/car/GET/caching/enabled",value=false' \
     'op=replace,path="/cars/trade-in/sap/car/GET/caching/enabled",value=false' \
