@@ -81,6 +81,7 @@ result=$(aws apigateway update-stage \
     'op=replace,path="/redirect/GET/caching/enabled",value=false' \
     'op=replace,path="/stock/new/cars/get/car/{id+}/GET/caching/enabled",value=false' \
     'op=replace,path="/stock/new/cars/get/city/{city+}/GET/caching/enabled",value=false' \
+    'op=replace,path="/stock/new/cars/get/region/{region+}/GET/caching/enabled",value=false' \
     'op=replace,path="/stock/new/cars/get/dealer/{dealer+}/GET/caching/enabled",value=false' \
     'op=replace,path="/stock/new/cars/search/GET/caching/enabled",value=false' \
     'op=replace,path="/stock/trade-in/cars/get/car/{id+}/GET/caching/enabled",value=false' \
