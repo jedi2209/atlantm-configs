@@ -138,9 +138,11 @@ services:
         MYSQL_DATABASE: 'atlantm'
         MYSQL_USER: 'atlantm'
         MYSQL_PASSWORD: 'XXXX'
-
-    adminer:
-      image: adminer
-      container_name: atlantm-api-adminer
+    cloudbeaver:
+      image: dbeaver/cloudbeaver
+      container_name: atlantm-api-cloudbeaver
+      restart: always
+      volumes:
+        - './cloudbeaver/cloudbeaver.conf:/workspace/.data/.cloudbeaver.runtime.conf'
       ports:
-        - 20080:8080
+        - 20080:8978
