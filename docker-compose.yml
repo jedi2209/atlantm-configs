@@ -1,20 +1,6 @@
 ###############################################################################
 #                          Zavarka Team Support                               #
 ###############################################################################
-version: "3.4"
-x-common-variables:
-  &common-variables
-    PRODUCTION_TYPE: prod
-    APP_DEBUG: 0
-x-common-variables:
-  &ftp-variables
-    USERS: "XXXX|XXXX|/ftp/new|10000 XXXX|XXXX|/ftp/trade-in|10002 XXXX|XXXX|/ftp/service-calc|10001 XXXX|3XavVBsYXXXX|/ftp/XXXX|1001"
-    ADDRESS: "ftp-api.xxx.com"
-x-volumes:
-  &project-volumes # {{папка локальная}}:{{папка на сервере}}
-x-common-variables:
-  &working-dir
-    /srv/docker ## папка на сервере от корня
 services:
     memcached:
       image: memcached:alpine
@@ -28,12 +14,13 @@ services:
       volumes:
         - ./vsftpd/vsftpd.conf:/etc/vsftpd/vsftpd.conf
         - ../ftp/:/ftp/
-        - ../docker/logs/vsftpd:/var/log/
+        - ${LOGS_DIR}/vsftpd:/var/log/
       ports:
         - "21:21"
         - "1024-1048:1024-1048"
       environment:
-        <<: *ftp-variables
+        USERS: ${FTP_USERS}
+        ADDRESS: ${FTP_ADDRESS}
     sftp:
       image: emberstack/sftp
       container_name: atlantm-api-sftp
@@ -42,10 +29,10 @@ services:
         - ./sftp/sftp-config.json:/app/config/sftp.json:ro
       ports:
         - "22122:22"
-    webserver:
+    nginx:
       image: nginx:alpine
       container_name: atlantm-api-nginx
-      working_dir: /srv/www
+      working_dir: ${WORKING_DIR}
       restart: always
       volumes:
         - ./nginx/conf.d:/etc/nginx/conf.d:ro
@@ -55,14 +42,14 @@ services:
         - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
         - ./nginx/fastcgi_params:/etc/nginx/fastcgi_params:ro
         - ./nginx/htpasswd:/etc/nginx/htpasswd:ro
-        - ../www:/srv/www
-        - ../docker/logs/nginx:/var/log/nginx
-        - ../docker/logs/nginx/default:/var/www/default/logs
-        - ../docker/logs/nginx/xxx.com:/var/www/xxx.com/logs
-        # - /srv/docker/logs/nginx/blog.xxx.com:/var/www/blog.xxx.com/logs
+        - ../www:${WORKING_DIR}
+        - ${LOGS_DIR}/nginx:/var/log/nginx
+        - ${LOGS_DIR}/nginx/default:/var/www/default/logs
+        - ${LOGS_DIR}/nginx/xxx.com:/var/www/xxx.com/logs
+        # - ${LOGS_DIR}/nginx/blog.xxx.com:/var/www/blog.xxx.com/logs
       ports:
-       - "80:80"
-       - "10080:10080"
+       - 80:80
+       - 10080:10080
       links:
         - php-fpm74
       depends_on:
@@ -70,79 +57,82 @@ services:
     php-fpm82:
       build: php-fpm8.2
       container_name: atlantm-api-php-fpm82
-      working_dir: /srv/www
+      working_dir: ${WORKING_DIR}
       volumes:
-        - '/srv/www:/srv/www'
-        - '../ftp/:/srv/ftp/'
-        # - './php-fpm8.2/php-8.2.ini:/etc/php/8.2/fpm/php.ini'
-        - './php-fpm8.2/php-ini-overrides.ini:/etc/php/8.2/fpm/conf.d/99-overrides.ini'
-        - './php-fpm8.2/php-ini-overrides.ini:/etc/php/8.2/cli/conf.d/99-overrides.ini'
-        - './php-fpm8.2/php-fpm.conf:/etc/php/8.2/fpm/php-fpm.conf'
-        - './php-fpm8.2/pool.d:/etc/php/8.2/fpm/pool.d'
-        - '../docker/tmp/mysql:/var/lib/mysql/'
-        - '../docker/tmp/php:/tmp/'
-        - '../docker/logs/php/8.2/:/var/log/'
-        - './.ssh/id_rsa:/home/ec2-user/.ssh/id_rsa'
-        - '~/.config/yandex-cloud:/var/www/.config/yandex-cloud'
-        - '~/yandex-cloud:/var/www/yandex-cloud'
-        - '~/.config/yandex-cloud:/root/.config/yandex-cloud'
-        - '~/yandex-cloud:/root/yandex-cloud'
-        - './.aws/credentials:/root/.aws/credentials'
+        - ../www:/srv/www
+        - ../ftp/:/srv/ftp/
+        # - ./php-fpm8.2/php-8.2.ini:/etc/php/8.2/fpm/php.ini
+        - ./php-fpm8.2/php-ini-overrides.ini:/etc/php/8.2/fpm/conf.d/99-overrides.ini
+        - ./php-fpm8.2/php-ini-overrides.ini:/etc/php/8.2/cli/conf.d/99-overrides.ini
+        - ./php-fpm8.2/php-fpm.conf:/etc/php/8.2/fpm/php-fpm.conf
+        - ./php-fpm8.2/pool.d:/etc/php/8.2/fpm/pool.d
+        - ../docker/tmp/mysql:/var/lib/mysql/
+        - ../docker/tmp/php:/tmp/
+        - ${LOGS_DIR}/php/8.2/:/var/log/
+        - ./.ssh/id_rsa:/home/ec2-user/.ssh/id_rsa
+        - ~/.config/yandex-cloud:/var/www/.config/yandex-cloud
+        - ~/yandex-cloud:/var/www/yandex-cloud
+        - ~/.config/yandex-cloud:/root/.config/yandex-cloud
+        - ~/yandex-cloud:/root/yandex-cloud
+        - ./.aws/credentials:/root/.aws/credentials
       ports:
-      - "9002:9002"
-      environment:
-        <<: *common-variables
-    php-fpm74:
-      build: php-fpm7.4
-      container_name: atlantm-api-php-fpm74
-      working_dir: /srv/www
-      volumes:
-        - '../www:/srv/www'
-        - '../ftp/:/srv/ftp/'
-        - './php-fpm7.4/php-7.4.ini:/etc/php/7.4/fpm/php.ini'
-        - './php-fpm7.4/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini'
-        - './php-fpm7.4/php-ini-overrides.ini:/etc/php/7.4/cli/conf.d/99-overrides.ini'
-        - './php-fpm7.4/php-fpm.conf:/etc/php/7.4/fpm/php-fpm.conf'
-        - './php-fpm7.4/pool.d:/etc/php/7.4/fpm/pool.d'
-        - '../docker/tmp/mysql:/var/lib/mysql/'
-        - '../docker/tmp/php:/tmp/'
-        - '../docker/logs/php/7.4/:/var/log/'
-        # - './php-fpm7.4/ImageMagick-6/policy.xml:/etc/ImageMagick-6/policy.xml'
-        - './.ssh/id_rsa:/home/ec2-user/.ssh/id_rsa'
-        - '~/.config/yandex-cloud:/var/www/.config/yandex-cloud'
-        - '~/yandex-cloud:/var/www/yandex-cloud'
-        - '~/.config/yandex-cloud:/root/.config/yandex-cloud'
-        - '~/yandex-cloud:/root/yandex-cloud'
-        - './.aws/credentials:/root/.aws/credentials'
-      ports:
-        - "9004:9004"
+        - 9002:9002
       links:
         - db:db
       environment:
-        <<: *common-variables
+        PRODUCTION_TYPE: ${PRODUCTION_TYPE}
+        APP_DEBUG: ${APP_DEBUG}
+    php-fpm74:
+      build: php-fpm7.4
+      container_name: atlantm-api-php-fpm74
+      working_dir: ${WORKING_DIR}
+      volumes:
+        - ../www:${WORKING_DIR}
+        - ../ftp/:/srv/ftp/
+        - ./php-fpm7.4/php-7.4.ini:/etc/php/7.4/fpm/php.ini
+        - ./php-fpm7.4/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
+        - ./php-fpm7.4/php-ini-overrides.ini:/etc/php/7.4/cli/conf.d/99-overrides.ini
+        - ./php-fpm7.4/php-fpm.conf:/etc/php/7.4/fpm/php-fpm.conf
+        - ./php-fpm7.4/pool.d:/etc/php/7.4/fpm/pool.d
+        - ../docker/tmp/mysql:/var/lib/mysql/
+        - ../docker/tmp/php:/tmp/
+        - ${LOGS_DIR}/php/7.4/:/var/log/
+        - ./.ssh/id_rsa:/home/ec2-user/.ssh/id_rsa
+        - ~/.config/yandex-cloud:/var/www/.config/yandex-cloud
+        - ~/yandex-cloud:/var/www/yandex-cloud
+        - ~/.config/yandex-cloud:/root/.config/yandex-cloud
+        - ~/yandex-cloud:/root/yandex-cloud
+        - ./.aws/credentials:/root/.aws/credentials
+      ports:
+        - 9004:9004
+      links:
+        - db:db
+      environment:
+        PRODUCTION_TYPE: ${PRODUCTION_TYPE}
+        APP_DEBUG: ${APP_DEBUG}
     db:
       image: mariadb:10.2
       container_name: atlantm-api-mysql
       command: --default-authentication-plugin=mysql_native_password
       restart: always
-      working_dir: /srv/www
+      working_dir: ${WORKING_DIR}
       volumes:
-        - '../docker/mysql:/var/lib/mysql'
-        - '../docker/logs/mysql/:/var/log/mysql'
-        - './mysql/conf.d/mysql.cnf:/etc/mysql/conf.d/mysql.cnf'
-        - './mysql/mysql.conf.d/:/etc/mysql/mysql.conf.d'
+        - ../docker/mysql:/var/lib/mysql
+        - ${LOGS_DIR}/mysql/:/var/log/mysql
+        - ./mysql/conf.d/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
+        - ./mysql/mysql.conf.d/:/etc/mysql/mysql.conf.d
       ports:
-        - "3306:3306"
+        - 3306:3306
       environment:
-        MYSQL_ROOT_PASSWORD: 'XXXX'
-        MYSQL_DATABASE: 'atlantm'
-        MYSQL_USER: 'atlantm'
-        MYSQL_PASSWORD: 'XXXX'
-    cloudbeaver:
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    cloudbeaver: # db management
       image: dbeaver/cloudbeaver
       container_name: atlantm-api-cloudbeaver
       restart: always
       volumes:
-        - './cloudbeaver/cloudbeaver.conf:/workspace/.data/.cloudbeaver.runtime.conf'
+        - ./cloudbeaver/cloudbeaver.conf:/workspace/.data/.cloudbeaver.runtime.conf
       ports:
         - 20080:8978
