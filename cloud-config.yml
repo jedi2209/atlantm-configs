@@ -1,0 +1,154 @@
+#cloud-config
+datasource:
+ Ec2:
+  strict_id: false
+ssh_pwauth: no
+ssh_deletekeys: false
+no_ssh_fingerprints: true
+
+install-unified-agent: 1
+package_update: true
+package_upgrade: true
+
+packages:
+  - mc
+  - git
+  - zsh
+  - ncdu
+  - docker
+  - mysql-client
+  - ca-certificates
+  - curl
+  - lynx
+  - gpg
+  - gnupg
+  - lsb-release
+  - screen 
+  - s3cmd
+  - software-properties-common
+
+users:
+  - name: admin
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    primary_group: admin
+    groups: admin,www-data
+    ssh_authorized_keys:
+      - ssh-ed25519 XXXX xxx1@xxx.xx
+
+ssh:
+  emit_keys_to_console: false
+
+write_files:
+  - path: "/srv/admin/.config/mc/panels.ini"
+    owner: "admin:admin"
+    permissions: "0644"
+    content: |
+      [New Left Panel]
+      display=listing
+      reverse=false
+      case_sensitive=true
+      exec_first=false
+      sort_order=name
+      list_mode=full
+      brief_cols=2
+      user_format=half type name | size | perm
+      user_status0=half type name | size | perm
+      user_status1=half type name | size | perm
+      user_status2=half type name | size | perm
+      user_status3=half type name | size | perm
+      user_mini_status=false
+      list_format=brief
+
+      [New Right Panel]
+      display=listing
+      reverse=false
+      case_sensitive=true
+      exec_first=false
+      sort_order=name
+      list_mode=full
+      brief_cols=2
+      user_format=half type name | size | perm
+      user_status0=half type name | size | perm
+      user_status1=half type name | size | perm
+      user_status2=half type name | size | perm
+      user_status3=half type name | size | perm
+      user_mini_status=false
+      list_format=brief
+
+      [Dirs]
+      current_is_left=true
+      other_dir=/home/admin
+    defer: true
+  - path: "/srv/admin/.ssh/api@xxx.com"
+    owner: "admin:admin"
+    permissions: "0600"
+    content: |
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      ***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+XXXXX====
+      -----END OPENSSH PRIVATE KEY-----
+    defer: true
+  - path: "/srv/admin/.ssh/api@xxx.com.pub"
+    owner: "admin:admin"
+    permissions: "0600"
+    content: "ssh-ed25519 XXXX api@xxx.com"
+    defer: true
+  - path: "/srv/admin/.config/yandex-cloud/config.yaml"
+    owner: "admin:admin"
+    permissions: "0600"
+    content: |
+      current: default
+      profiles:
+        default:
+          token: XXXX
+          cloud-id: XXXX
+          folder-id: XXXX
+    defer: true
+  - path: "/srv/init.sh"
+    owner: "admin:admin"
+    permissions: "0755"
+    content: |
+      #!/bin/bash
+
+      sudo mkdir -m 0755 -p /root/.config/mc/; \
+      cp -a /srv/admin/. /home/admin; sudo cp -a /srv/admin/.config/. /root/.config; \
+
+      sudo chown -R root:root /root/.config/.; sudo chown -R admin:admin /home/admin/; sudo rm -rf /srv/admin; \
+
+      sudo rm -rf /usr/share/keyrings/docker-archive-keyring.gpg /usr/share/keyrings/hashicorp-archive-keyring.gpg; curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg; \
+      wget -O- -nc -q -x https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg; gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint; \
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list; \
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null; \
+
+      sudo chsh $(whoami) -s $(which zsh); sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"; \
+      sudo apt-get update -y; sudo ufw allow openssh; sudo ufw allow ftp; sudo service ufw restart; \
+
+      sudo mkdir -m 0755 -p /srv/www /srv/docker /srv/config /srv/www/xxx.com/public_html /srv/www/XXXX.cx/public_html; \
+      sudo chown -R 1000:33 /srv/www /srv/docker /srv/config /srv/www/xxx.com/public_html /srv/www/XXXX.cx/public_html; \
+
+      eval `GIT_SSH_COMMAND='ssh -i ~/.ssh/api@xxx.com -o StrictHostKeyChecking=no -o IdentitiesOnly=yes' git clone git@bitbucket.org:zavarkateam/atlantm-main.git /srv/www/xxx.com/public_html` && \
+
+      sudo mkdir -m 0755 -p /srv/www/xxx.com/public_html/mnt_files; \
+      sudo chown -R 1000:33 /srv/www/xxx.com/public_html/mnt_files; \
+
+      sudo mount -t virtiofs api /srv/www/xxx.com/public_html/mnt_files; \
+      echo "api /srv/www/xxx.com/public_html/mnt_files virtiofs    rw    0   0" | sudo tee -a /etc/fstab; \
+
+      eval `GIT_SSH_COMMAND='ssh -i ~/.ssh/api@xxx.com -o StrictHostKeyChecking=no -o IdentitiesOnly=yes' git clone git@bitbucket.org:zavarkateam/atlantm-config.git /srv/config` && \
+      sudo chmod 0600 /srv/config/logrotate.conf && sudo chown root:root /srv/config/logrotate.conf && sudo logrotate /srv/config/logrotate.conf -d -v; \
+      
+      mkdir ~/.mysql && \
+      wget "https://storage.yandexcloud.net/cloud-certs/CA.pem" -O ~/.mysql/root.crt && \
+      chmod 0600 ~/.mysql/root.crt;
+    defer: true
+
+runcmd:
+  - wget -O - https://monitoring.api.cloud.yandex.net/monitoring/v2/unifiedAgent/config/install.sh | bash
+  - su admin -c "/srv/init.sh"
+  - su admin -c "curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | zsh"
+  # - cd /srv/config; docker-compose up --no-start; docker-compose restart && crontab cron/crontab;
