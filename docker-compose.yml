@@ -46,7 +46,7 @@ services:
         - ${LOGS_DIR}/nginx:/var/log/nginx
         - ${LOGS_DIR}/nginx/default:/var/www/default/logs
         - ${LOGS_DIR}/nginx/xxx.com:/var/www/xxx.com/logs
-        # - ${LOGS_DIR}/nginx/blog.xxx.com:/var/www/blog.xxx.com/logs
+        - ${LOGS_DIR}/nginx/XXXX.cx:/var/www/XXXX.cx/logs
       ports:
        - 80:80
        - 10080:10080
