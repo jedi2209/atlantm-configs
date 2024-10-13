@@ -7,11 +7,14 @@ ssh_deletekeys: false
 no_ssh_fingerprints: true
 
 install-unified-agent: 1
+serial-port-enable: 1
+
 package_update: true
 package_upgrade: true
 
 packages:
   - mc
+  - jq
   - git
   - zsh
   - ncdu
@@ -32,12 +35,15 @@ users:
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
     primary_group: admin
-    groups: admin,www-data
+    groups: admin,www-data,docker
     ssh_authorized_keys:
       - ssh-ed25519 XXXX xxx1@xxx.xx
 
 ssh:
   emit_keys_to_console: false
+
+mounts:
+ - [ api, /srv/www/xxx.com/public_html/mnt_files, virtiofs, "rw,nofail", "0", "0" ]
 
 write_files:
   - path: "/srv/admin/.config/mc/panels.ini"
@@ -120,26 +126,19 @@ XXXXX====
       sudo chown -R root:root /root/.config/.; sudo chown -R admin:admin /home/admin/; sudo rm -rf /srv/admin; \
 
       sudo rm -rf /usr/share/keyrings/docker-archive-keyring.gpg /usr/share/keyrings/hashicorp-archive-keyring.gpg; curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg; \
-      wget -O- -nc -q -x https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg; gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint; \
-      echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list; \
       echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
       $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null; \
 
       sudo chsh $(whoami) -s $(which zsh); sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"; \
       sudo apt-get update -y; sudo ufw allow openssh; sudo ufw allow ftp; sudo service ufw restart; \
 
-      sudo mkdir -m 0755 -p /srv/www /srv/docker /srv/config /srv/www/xxx.com/public_html /srv/www/XXXX.cx/public_html; \
-      sudo chown -R 1000:33 /srv/www /srv/docker /srv/config /srv/www/xxx.com/public_html /srv/www/XXXX.cx/public_html; \
-
-      eval `GIT_SSH_COMMAND='ssh -i ~/.ssh/api@xxx.com -o StrictHostKeyChecking=no -o IdentitiesOnly=yes' git clone git@bitbucket.org:zavarkateam/atlantm-main.git /srv/www/xxx.com/public_html` && \
-
-      sudo mkdir -m 0755 -p /srv/www/xxx.com/public_html/mnt_files; \
-      sudo chown -R 1000:33 /srv/www/xxx.com/public_html/mnt_files; \
-
-      sudo mount -t virtiofs api /srv/www/xxx.com/public_html/mnt_files; \
-      echo "api /srv/www/xxx.com/public_html/mnt_files virtiofs    rw    0   0" | sudo tee -a /etc/fstab; \
-
+      cd  /srv/www/xxx.com/public_html && git init && git remote add origin git@bitbucket.org:zavarkateam/atlantm-main.git && \
+      eval `GIT_SSH_COMMAND='ssh -i ~/.ssh/api@xxx.com -o StrictHostKeyChecking=no -o IdentitiesOnly=yes' git clone git@bitbucket.org:zavarkateam/XXXX.cx.git /srv/www/XXXX.cx/public_html` && \
+      eval `GIT_SSH_COMMAND='ssh -i ~/.ssh/api@xxx.com -o StrictHostKeyChecking=no -o IdentitiesOnly=yes' git pull origin master` && git branch --set-upstream-to=origin/master master && \
       eval `GIT_SSH_COMMAND='ssh -i ~/.ssh/api@xxx.com -o StrictHostKeyChecking=no -o IdentitiesOnly=yes' git clone git@bitbucket.org:zavarkateam/atlantm-config.git /srv/config` && \
+
+      sudo mount -a; \
+      
       sudo chmod 0600 /srv/config/logrotate.conf && sudo chown root:root /srv/config/logrotate.conf && sudo logrotate /srv/config/logrotate.conf -d -v; \
       
       mkdir ~/.mysql && \
@@ -148,7 +147,14 @@ XXXXX====
     defer: true
 
 runcmd:
-  - wget -O - https://monitoring.api.cloud.yandex.net/monitoring/v2/unifiedAgent/config/install.sh | bash
+  # - chmod 666 /var/run/docker.sock
+  - mkdir -m 0755 -p /srv/docker /srv/config /srv/www/XXXX.cx/public_html /srv/www/xxx.com/public_html
+  - chown -R 1000:33 /srv/www/XXXX.cx /srv/docker /srv/config
+  - chown 1000:33 /srv/www/xxx.com/public_html /srv/docker /srv/config
+  - wget -O - https://monitoring.api.cloud.yandex.net/monitoring/v2/unifiedAgent/config/install.sh | sudo bash
+  - wget -O - https://storage.yandexcloud.net/backup-distributions/agent_installer.sh | sudo bash
+  - wget -O - https://storage.yandexcloud.net/backup-distributions/agent_reinit.sh | sudo bash
   - su admin -c "/srv/init.sh"
-  - su admin -c "curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | zsh"
-  # - cd /srv/config; docker-compose up --no-start; docker-compose restart && crontab cron/crontab;
+  - su admin -c "curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash"
+  - su admin -c "source '/home/admin/.zshrc'"
+  - su admin -c "cd /srv/config; ./docker.init.sh"
