@@ -23,20 +23,27 @@ done
 
 printf "\r\n\r\n";
 
+cd /srv/config && docker-compose stop && docker-compose down && \
+docker-compose up --build --detach --force-recreate --no-start; \
+docker-compose restart;
+
+exit;
+
 # Iterate over each directory in the array
 for dir in "${CONFIG_DIRS[@]}"; do
   # Iterate over all .conf files in the directory
   for file in "$dir"/*.conf; do
     # Extract the root parameter
     root_dir=$(grep -oP 'root\s+\K\S+' "$file")
-
-    # Check if the root directory exists
-    if [ ! -d "$root_dir" ]; then
-      # Rename the file with a .off suffix
-      mv "$file" "$file.off"
-      printf "\tRenamed\t$file\t\t\t=>\t\t$file.off\r\n"
+    
+    # Check if the root_dir variable is not empty
+    if [ -n "$root_dir" ]; then
+      # Check if the root directory exists
+      if [ ! -d "$root_dir" ]; then
+        # Rename the file with a .off suffix
+        mv "$file" "$file.off"
+        printf "\tRenamed\t$file\t\t\t=>\t\t$file.off\r\n"
+      fi
     fi
   done
 done
-
-cd /srv/config && docker-compose stop && docker-compose down && docker-compose up --build --detach --force-recreate;
