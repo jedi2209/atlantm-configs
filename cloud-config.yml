@@ -92,10 +92,6 @@ write_files:
     content: |
       -----BEGIN OPENSSH PRIVATE KEY-----
       ***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-XXXXX====
       -----END OPENSSH PRIVATE KEY-----
     defer: true
   - path: "/srv/admin/.ssh/api@xxx.com.pub"
